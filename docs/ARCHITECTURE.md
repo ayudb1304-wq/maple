@@ -44,7 +44,7 @@ Next.js (Vercel)
 
 - Route: `app/api/card/route.tsx`, `export const runtime = 'edge'`.
 - Steps:
-  1. Fetch the Geoapify static map (server-side, key from `process.env.GEOAPIFY_KEY`) sized 1200×630, dark style, one marker. Fetch it **through our own cached helper**, not fresh per card.
+  1. Fetch the Geoapify static map (server-side, key from `process.env.GEOAPIFY_KEY`) sized 1200×630, `dark-matter-brown` style, one marker. Fetch it **through our own cached helper**, not fresh per card. Note the response is **JPEG**, not PNG (verified at T0.2) — Satori handles both.
   2. Fetch the same verdict JSON used by the page (share the aggregation function directly, don't HTTP-self-call).
   3. Build the Satori tree: `<div style={{display:'flex' ...}}>` with the map PNG as an absolutely-positioned `<img>` (Satori accepts PNG/JPEG only — never pass WebP or SVG-with-foreignObject).
   4. Return `new ImageResponse(tree, { width: 1200, height: 630 })` with `Cache-Control: public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800`.

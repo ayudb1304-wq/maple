@@ -54,3 +54,13 @@ See `docs/BUILD_PLAN.md` for the phased task list. v1 ships when:
 - No auth, no database, no push notifications, no email, no webhook handling, no observation log. These are Phase 2 (`docs/PRD.md` §7).
 - No aurora ground-track math beyond mapping the SWPC OVATION grid to the user's latitude.
 - No LLM/AI features of any kind (cost constraint).
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
