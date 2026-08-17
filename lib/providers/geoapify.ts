@@ -2,6 +2,7 @@ import 'server-only';
 
 import { cachedFetch } from '../http';
 import { geoapifyKey } from '../env';
+import { roundCoord } from '../geo';
 
 /**
  * Geoapify Static Maps — the card's background raster. KEYED, SERVER ONLY.
@@ -27,15 +28,6 @@ export type StaticMap = {
   /** image/jpeg in practice; read from the response so Satori gets it right. */
   contentType: string;
 };
-
-/**
- * Rounding to 2 decimals (~1km) is the cache key strategy from
- * ARCHITECTURE.md: nearby users share one cached map, so a city costs ~5
- * Geoapify credits per month rather than per view.
- */
-export function roundCoord(value: number): number {
-  return Math.round(value * 100) / 100;
-}
 
 /** Returns null when the key is unset or the fetch fails — the card then uses its gradient fallback. */
 export async function fetchStaticMap(

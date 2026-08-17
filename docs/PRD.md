@@ -59,7 +59,33 @@ Pricing (configure in Dodo, not code): $4.99/mo or $39/yr; test $49 lifetime. v1
 
 - **Phase 1 (this build):** everything in CLAUDE.md "What done means". Stateless — localStorage holds the saved location and a simple check-in streak counter.
 - **Phase 2:** auth (magic link), DB, Dodo webhooks → real Pro gating, alerts via email, observation log.
-- **Phase 3:** monthly "My Skies" recap card, ISS-pass card as a sibling product on shared infra.
+- **Phase 3:** monthly "My Skies" recap card, ISS-pass card as a sibling product on shared infra, **and the memory card (below)**.
+
+### Phase 3 candidate: the memory card ("the sky the night we met")
+
+A card for a *past* date and place: "15 June 2019, Bengaluru — near-full moon, clear after 8 PM."
+Potentially a wider viral surface than tonight's card, because it shares to everyone rather than only to photographers.
+
+Feasibility was probed on 2026-08-17 against a real past date (2019-06-15, Bengaluru). **Three of the four data sources already support it:**
+
+| Section | Past-date support | Notes |
+|---|---|---|
+| Cloud cover | ✅ | Separate endpoint: `https://archive-api.open-meteo.com/v1/archive?...&start_date=&end_date=&hourly=cloud_cover`. Covers 1940→present, same response shape as the forecast API. |
+| Sun / golden hour | ✅ | SunriseSunset.io accepts any `date`. Returned sunset 18:51:18 for the probe date. |
+| Moon phase | ✅ | Returned "Waxing Gibbous, 95.11% lit". `suncalc` also computes any date offline. |
+| Aurora | ❌ | SWPC's Kp history holds only ~7 days. The full archive back to 1932 lives at GFZ Potsdam — **a new provider whose terms have not been reviewed**. Omit aurora for old dates unless that is cleared. |
+
+Why this is cheap to add later: `docs/ARCHITECTURE.md` already specifies the card as `/api/card?lat&lon&date=YYYY-MM-DD`, so the contract anticipates it. Past dates are also the ideal cache case — 1940's weather never changes, so the response is genuinely immutable and costs nothing after first render.
+
+**Decision (2026-08-17):** build the v1 card engine first so it is visually proven, then add the date. The memory card reuses the same renderer, score, layout and map.
+
+### Location precision
+
+Two different precisions, on purpose:
+
+- **Provider/cache coordinates:** rounded to 2dp (~1.1km). Weather does not vary meaningfully at 11m, and this rounding is what keeps Geoapify at ~5 credits per city per month.
+- **Map display:** may use finer coordinates and street-level zoom (verified working at zoom 17), so a user can frame their own street or a specific spot.
+- **Share URLs: always rounded to city level.** A share card is pasted into group chats; a home address must never travel with it.
 
 ## 8. SEO surface (build with v1, it's cheap)
 

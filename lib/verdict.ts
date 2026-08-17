@@ -4,7 +4,7 @@ import { ATTRIBUTION_LINE } from './constants';
 import { fetchCloudCover } from './providers/openmeteo';
 import { fetchSunMoon } from './providers/sunrisesunset';
 import { fetchAuroraProbability, fetchKpForecast } from './providers/swpc';
-import { roundCoord } from './providers/geoapify';
+import { roundCoord } from './geo';
 import { computeScore, verdictHeadline, verdictLine } from './score';
 import { formatWindow, tonightDate } from './time';
 import type { Verdict } from './types';
