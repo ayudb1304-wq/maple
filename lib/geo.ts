@@ -43,6 +43,24 @@ export function parseZoom(raw: string | null | undefined): number {
   return Number.isFinite(parsed) ? clampZoom(parsed) : DEFAULT_MAP_ZOOM;
 }
 
+/**
+ * Parse a coordinate query param, returning null when it is absent or invalid.
+ *
+ * The explicit null check is the whole point. `Number(null)` is **0**, not NaN,
+ * so `Number(params.get('lat'))` turns a missing parameter into a perfectly
+ * valid coordinate: 0,0 in the Gulf of Guinea. The endpoint then answers
+ * confidently about the wrong place instead of rejecting the request.
+ */
+export function parseCoord(raw: string | null | undefined, limit: 90 | 180): number | null {
+  if (raw === null || raw === undefined || raw.trim() === '') return null;
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed) || Math.abs(parsed) > limit) return null;
+  return parsed;
+}
+
+export const parseLatitude = (raw: string | null | undefined) => parseCoord(raw, 90);
+export const parseLongitude = (raw: string | null | undefined) => parseCoord(raw, 180);
+
 /** Our own cached proxy for the Geoapify raster. Never contains the API key. */
 export function staticMapUrl(
   appUrl: string,

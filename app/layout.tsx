@@ -19,6 +19,16 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'SkyTonight',
     url: APP_URL,
+    // The landing page has no location of its own, so its preview uses a
+    // representative card. Per-city pages override this with their own.
+    images: [
+      {
+        url: '/api/card?lat=12.97&lon=77.59&city=Bengaluru',
+        width: 1200,
+        height: 630,
+        alt: 'Tonight’s sky score, golden hour, moon phase and cloud cover',
+      },
+    ],
   },
   twitter: { card: 'summary_large_image' },
 };

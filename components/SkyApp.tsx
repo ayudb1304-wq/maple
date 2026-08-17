@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { SearchBox } from './SearchBox';
 import { StreakBadge } from './StreakBadge';
 import { VerdictPanel } from './VerdictPanel';
+import { ShareButton } from './ShareButton';
 import { advanceStreak, readState, streakLength, writeState } from '@/lib/streak';
 import { localDateString } from '@/lib/time';
 import type { Place, Verdict } from '@/lib/types';
@@ -156,7 +157,7 @@ export function SkyApp() {
             {error}
           </p>
         ) : verdict ? (
-          <VerdictPanel verdict={verdict} />
+          <VerdictPanel verdict={verdict} action={<ShareButton verdict={verdict} />} />
         ) : busy ? (
           <SkeletonPanel />
         ) : (

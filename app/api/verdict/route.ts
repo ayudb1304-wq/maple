@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 
 import { getVerdict } from '@/lib/verdict';
+import { parseLatitude, parseLongitude } from '@/lib/geo';
 
 /**
  * GET /api/verdict?lat=..&lon=..&tz=..&city=..
@@ -22,10 +23,10 @@ function isValidTimezone(tz: string): boolean {
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
-  const lat = Number(params.get('lat'));
-  const lon = Number(params.get('lon'));
+  const lat = parseLatitude(params.get('lat'));
+  const lon = parseLongitude(params.get('lon'));
 
-  if (!Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) {
+  if (lat === null || lon === null) {
     return Response.json(
       { error: 'lat and lon are required and must be valid coordinates' },
       { status: 400 },

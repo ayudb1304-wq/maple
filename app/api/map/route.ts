@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 
 import { fetchStaticMap } from '@/lib/providers/geoapify';
-import { parseZoom } from '@/lib/geo';
+import { parseLatitude, parseLongitude, parseZoom } from '@/lib/geo';
 
 /**
  * GET /api/map?lat=..&lon=..&zoom=..
@@ -17,10 +17,10 @@ import { parseZoom } from '@/lib/geo';
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
-  const lat = Number(params.get('lat'));
-  const lon = Number(params.get('lon'));
+  const lat = parseLatitude(params.get('lat'));
+  const lon = parseLongitude(params.get('lon'));
 
-  if (!Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) {
+  if (lat === null || lon === null) {
     return new Response('Bad coordinates', { status: 400 });
   }
 

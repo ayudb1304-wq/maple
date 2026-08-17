@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 import { APP_URL } from '@/lib/env';
 import { ATTRIBUTION_LINE } from '@/lib/constants';
-import { parseZoom, staticMapUrl } from '@/lib/geo';
+import { parseLatitude, parseLongitude, parseZoom, staticMapUrl } from '@/lib/geo';
 import { getVerdict } from '@/lib/verdict';
 import { CARD_SAMPLES, SAMPLES_ENABLED } from '@/lib/cardSamples';
 import type { Verdict } from '@/lib/types';
@@ -70,10 +70,10 @@ async function loadFont(origin: string, path: string, weight: 400 | 600): Promis
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
-  const lat = Number(params.get('lat'));
-  const lon = Number(params.get('lon'));
+  const lat = parseLatitude(params.get('lat'));
+  const lon = parseLongitude(params.get('lon'));
 
-  if (!Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) {
+  if (lat === null || lon === null) {
     return new Response('lat and lon are required', { status: 400 });
   }
 
