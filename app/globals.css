@@ -1,26 +1,89 @@
 @import "tailwindcss";
 
+/*
+ * SkyTonight is dark-first by design (PRD §5): the product is about the night
+ * sky, and the share card is dark, so the app should match what it produces.
+ * There is no light theme.
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #06070d;
+  --surface: #0d1018;
+  --surface-raised: #141926;
+  --border: #232838;
+  --foreground: #e8ecf5;
+  --muted: #8891a8;
+
+  /*
+   * Two colour roles, deliberately separate:
+   * --brand is fixed and belongs to interactive controls. It must never be
+   *   driven by data, or a bad-sky night renders the primary button grey and
+   *   it reads as disabled.
+   * --accent is the score theme (PRD §5) and belongs to the verdict: dial,
+   *   headline, chips and the page glow.
+   */
+  --brand: #00d5be;
+  --brand-dim: #00d5be26;
+
+  --accent: #00d5be;
+  --accent-dim: #00d5be26;
+}
+
+[data-theme="good"] {
+  --accent: #00d5be;
+  --accent-dim: #00d5be26;
+}
+
+[data-theme="mixed"] {
+  --accent: #f0b429;
+  --accent-dim: #f0b42926;
+}
+
+[data-theme="poor"] {
+  --accent: #7c8496;
+  --accent-dim: #7c849626;
+}
+
+[data-theme="aurora"] {
+  --accent: #6ee787;
+  --accent-dim: #6ee78726;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border-subtle: var(--border);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
+  --color-brand: var(--brand);
+  --color-brand-dim: var(--brand-dim);
+  --font-sans: var(--font-inter);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  /* A faint glow behind the fold, so the page reads as sky rather than slab. */
+  background-image: radial-gradient(
+    120% 80% at 50% -20%,
+    color-mix(in srgb, var(--accent) 10%, transparent) 0%,
+    transparent 60%
+  );
+  background-repeat: no-repeat;
+  transition: background-image 400ms ease;
+}
+
+/* The accent transition should not fight a user who asked for stillness. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

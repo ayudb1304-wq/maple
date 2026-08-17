@@ -7,6 +7,9 @@ import { fetchAuroraProbability, fetchKpForecast } from './providers/swpc';
 import { roundCoord } from './providers/geoapify';
 import { computeScore, verdictHeadline, verdictLine } from './score';
 import { formatWindow, tonightDate } from './time';
+import type { Verdict } from './types';
+
+export type { Verdict } from './types';
 
 /**
  * Verdict aggregation (ARCHITECTURE.md "Data flow for the verdict").
@@ -17,39 +20,6 @@ import { formatWindow, tonightDate } from './time';
  * Failure policy: one dead provider nulls one section and sets `degraded`.
  * Nothing in here throws for a provider outage.
  */
-
-export type Verdict = {
-  location: {
-    latitude: number;
-    longitude: number;
-    timezone: string;
-    city: string | null;
-  };
-  /** The local date "tonight" refers to at this location. */
-  date: string;
-  score: number | null;
-  headline: string;
-  verdict: string;
-  theme: 'good' | 'mixed' | 'poor' | 'aurora';
-  goldenHour: { begin: string | null; end: string | null; label: string | null } | null;
-  blueHour: { begin: string | null; end: string | null; label: string | null } | null;
-  sunset: string | null;
-  moon: {
-    illuminationPercent: number | null;
-    phase: string | null;
-    phaseValue: number | null;
-  } | null;
-  aurora: { probability: number | null; kp: number | null } | null;
-  cloudCoverEvening: { meanPercent: number; minPercent: number } | null;
-  polar: 'day' | 'night' | null;
-  /** True when any section came back empty because a provider failed. */
-  degraded: boolean;
-  /** Which sections are missing, for honest UI copy. */
-  missing: string[];
-  attribution: string;
-  /** Whether sun/moon came from the API or the local suncalc fallback. */
-  sunMoonSource: 'sunrisesunset.io' | 'suncalc';
-};
 
 export type VerdictOptions = {
   latitude: number;
